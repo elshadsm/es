@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-4.0.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+    <mvc:annotation-driven />
+
+    <context:annotation-config />
+    <context:component-scan base-package="com.emdk" use-default-filters="false">
+        <context:include-filter type="annotation"
+                expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+
+
+
+
+
+    <!--******************************************************************************************************************-->
+
+    <!-- Data Base Connection -->
+
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+
+
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/hal?useUnicode=yes&amp;characterEncoding=UTF-8"/>
+
+
+        <property name="user" value="root" />
+        <property name="password" value="elshad" />
+
+
+        <!-- pool sizing -->
+        <property name="initialPoolSize" value="3"/>
+        <property name="minPoolSize" value="7"/>
+        <property name="maxPoolSize" value="25"/>
+        <property name="acquireIncrement" value="3"/>
+        <property name="maxStatements" value="0"/>
+
+
+        <!-- retries -->
+        <property name="acquireRetryAttempts" value="30"/>
+        <property name="acquireRetryDelay" value="1000"/>
+        <!-- 1s -->
+        <property name="breakAfterAcquireFailure" value="false"/>
+
+
+        <!-- refreshing connections -->
+        <property name="maxIdleTime" value="180"/>
+        <!-- 3min -->
+        <property name="maxConnectionAge" value="10"/>
+        <!-- 1h -->
+
+
+        <!-- timeouts and testing -->
+        <property name="checkoutTimeout" value="5000"/>
+        <!-- 5s -->
+        <property name="idleConnectionTestPeriod" value="60"/>
+        <!-- 60 -->
+        <property name="testConnectionOnCheckout" value="true"/>
+        <property name="preferredTestQuery" value="SELECT 1"/>
+        <property name="testConnectionOnCheckin" value="true"/>
+
+    </bean>
+
+
+    <bean id="dbHelper" class="com.emdk.es.dao.DBHelper">
+        <constructor-arg>
+            <ref bean="dataSource"/>
+        </constructor-arg>
+    </bean>
+
+
+</beans>
